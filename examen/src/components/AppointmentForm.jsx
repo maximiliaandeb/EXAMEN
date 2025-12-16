@@ -28,6 +28,7 @@ export default function AppointmentForm({
   onSave,
   onCancel,
   onDelete,
+  appointments = [],
   availabilities,
 }) {
   const [type, setType] = useState(initial?.type || TYPES[0].value);
@@ -57,19 +58,33 @@ export default function AppointmentForm({
   const availableTimes = useMemo(() => {
     const duration = getDuration();
     const dayAvail = availabilities.filter((a) => a.date === apptDate);
+    const dayAppts = appointments.filter(
+      (a) => a.date === apptDate && a.id !== initial?.id
+    );
     if (dayAvail.length === 0) return [];
     return allTimes.filter((t) => {
       const start = timeToMinutes(t);
       const end = start + duration;
-      return dayAvail.some(
+      const fitsAvailability = dayAvail.some(
         (a) => timeToMinutes(a.start) <= start && timeToMinutes(a.end) >= end
       );
+      if (!fitsAvailability) return false;
+      return !dayAppts.some((appt) => {
+        const apptStart = timeToMinutes(appt.time);
+        const apptEnd = apptStart + getAppointmentDuration(appt);
+        return start < apptEnd && end > apptStart;
+      });
     });
-  }, [allTimes, availabilities, apptDate]);
+  }, [allTimes, appointments, availabilities, apptDate, initial]);
 
   function getDuration() {
     const t = TYPES.find((x) => x.value === type);
     return t?.duration || 60;
+  }
+
+  function getAppointmentDuration(appt) {
+    const typeInfo = TYPES.find((x) => x.value === appt.type);
+    return appt.duration ?? typeInfo?.duration ?? 0;
   }
 
   function validateAvailability() {
@@ -77,17 +92,30 @@ export default function AppointmentForm({
     const start = timeToMinutes(time);
     const end = start + duration;
     const dayAvail = availabilities.filter((a) => a.date === apptDate);
+    const dayAppts = appointments.filter(
+      (a) => a.date === apptDate && a.id !== initial?.id
+    );
     if (dayAvail.length === 0) return false;
     // any availability covering the whole appointment
-    return dayAvail.some(
+    const hasAvailability = dayAvail.some(
       (a) => timeToMinutes(a.start) <= start && timeToMinutes(a.end) >= end
     );
+    if (!hasAvailability) return false;
+    // reject overlap with existing appointments on the same day
+    const hasConflict = dayAppts.some((appt) => {
+      const apptStart = timeToMinutes(appt.time);
+      const apptEnd = apptStart + getAppointmentDuration(appt);
+      return start < apptEnd && end > apptStart;
+    });
+    return !hasConflict;
   }
 
   function handleSubmit(e) {
     e.preventDefault();
     if (!validateAvailability()) {
-      alert("Fout: Er is geen beschikbaarheid voor die datum/tijd.");
+      alert(
+        "Fout: Er is geen beschikbaarheid of er bestaat al een afspraak in deze periode."
+      );
       return;
     }
     onSave({

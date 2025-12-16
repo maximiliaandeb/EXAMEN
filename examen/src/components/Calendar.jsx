@@ -11,6 +11,8 @@ export default function Calendar({
   appointments,
   availabilities,
   onEditAppointment,
+  onEditAvailability,
+  onDayClick,
   onPrev,
   onNext,
 }) {
@@ -72,11 +74,19 @@ export default function Calendar({
                   (isToday ? "today " : "") +
                   (isWeekend ? "weekend" : "")
                 }
+                onClick={() => onDayClick && onDayClick(iso)}
               >
                 <div className="day-number">{cell.getDate()}</div>
                 <div className="day-content">
                   {dayAvail.map((av) => (
-                    <div key={av.id} className="avail-badge">
+                    <div
+                      key={av.id}
+                      className="avail-badge"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onEditAvailability(av);
+                      }}
+                    >
                       Beschikbaar {av.start}-{av.end}
                     </div>
                   ))}

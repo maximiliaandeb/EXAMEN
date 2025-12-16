@@ -58,6 +58,7 @@ export default function App() {
     setModalContent(
       <AppointmentForm
         date={date}
+        appointments={appointments}
         availabilities={availabilities}
         onCancel={() => setModalContent(null)}
         onSave={(a) => {
@@ -78,6 +79,7 @@ export default function App() {
     setModalContent(
       <AppointmentForm
         initial={appt}
+        appointments={appointments}
         availabilities={availabilities}
         onCancel={() => setModalContent(null)}
         onDelete={(id) => {
@@ -115,6 +117,44 @@ export default function App() {
     );
   }
 
+  function openDayQuickActions(date) {
+    setModalContent(
+      <div className="quick-add-modal">
+        <h3>Nieuwe invoer</h3>
+        <p className="quick-add-date">Datum: {date || "(geen datum)"}</p>
+        <div className="quick-add-buttons">
+          <button className="btn" onClick={() => openNewAppointment(date)}>
+            Nieuwe afspraak
+          </button>
+          <button className="btn btn-add" onClick={() => openNewAvailability(date)}>
+            Beschikbaarheid
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  function openEditAvailability(avail) {
+    setModalContent(
+      <AvailabilityForm
+        initial={avail}
+        onCancel={() => setModalContent(null)}
+        onDelete={(id) => {
+          setAvailabilities((prev) => prev.filter((p) => p.id !== id));
+          setModalContent(null);
+        }}
+        onSave={(av) => {
+          setAvailabilities((prev) =>
+            [...prev.filter((p) => p.id !== av.id), av].sort((a, b) =>
+              a.date.localeCompare(b.date)
+            )
+          );
+          setModalContent(null);
+        }}
+      />
+    );
+  }
+
   return (
     <div className="app">
       <h1>Agenda</h1>
@@ -135,6 +175,8 @@ export default function App() {
           appointments={appointments}
           availabilities={availabilities}
           onEditAppointment={(a) => openEditAppointment(a)}
+          onEditAvailability={(av) => openEditAvailability(av)}
+          onDayClick={(iso) => openDayQuickActions(iso)}
           onPrev={handlePrev}
           onNext={handleNext}
         />

@@ -1,7 +1,12 @@
 import React, { useState, useMemo } from "react";
 import { timeToMinutes, addMinutesToTime } from "./dateUtils";
 
-export default function AvailabilityForm({ initial, onSave, onCancel }) {
+export default function AvailabilityForm({
+  initial,
+  onSave,
+  onCancel,
+  onDelete,
+}) {
   const [date, setDate] = useState(
     initial?.date || new Date().toISOString().slice(0, 10)
   );
@@ -82,6 +87,23 @@ export default function AvailabilityForm({ initial, onSave, onCancel }) {
         <button type="button" onClick={onCancel}>
           Annuleren
         </button>
+        {onDelete && initial?.id && (
+          <button
+            type="button"
+            className="danger"
+            onClick={() => {
+              if (
+                confirm(
+                  "Weet je zeker dat je deze beschikbaarheid wilt verwijderen?"
+                )
+              ) {
+                onDelete(initial.id);
+              }
+            }}
+          >
+            Verwijderen
+          </button>
+        )}
       </div>
     </form>
   );
