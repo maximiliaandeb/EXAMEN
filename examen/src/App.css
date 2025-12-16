@@ -32,17 +32,9 @@ body{margin:0;background:var(--bg);font-family:Inter, Arial, sans-serif;color:#1
 .calendar-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 .calendar-header h2{margin:0;font-size:20px}
 
-.weekday-row{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:8px}
+.weekday-row{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;margin-bottom:8px;max-width:1200px;margin-left:auto;margin-right:auto}
 .weekday-row > div{font-weight:700;text-align:center}
 
-.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:48px;max-width:2400px;margin:0 auto}
-.day-cell{height:200px;border:1px solid var(--card-border);border-radius:20px;padding:18px;position:relative;background:#fff;overflow:hidden;display:flex;flex-direction:column}
-.day-cell.empty{background:transparent;border-style:solid;opacity:0.6}
-.day-number{position:absolute;left:16px;top:16px;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#eef;font-size:16px;font-weight:700}
-.day-content{margin-top:72px;display:flex;flex-direction:column;gap:8px;flex:1;overflow-y:auto;padding-right:6px}
-
-.avail-badge{/* oude regel verwijderd, zie onder */}
-.appt-badge{/* oude regel verwijderd, zie onder */}
 .appt-beeldbellen{background:#60c1be}
 .appt-belafspraak{background:#ff6b6b}
 .appt-behandeling{background:#b28cff}
@@ -97,7 +89,7 @@ input[type="date"]::-webkit-datetime-edit-year-field:focus {
 
 /* Minimalistische agenda styling zoals in het design */
 .calendar-grid{display:grid;grid-template-columns:repeat(7, 1fr);gap:12px;max-width:1200px;margin:0 auto}
-.day-cell{height:110px; min-width:150px; border:1.5px solid #222;border-radius:14px;padding:10px;position:relative;background:#fff;overflow:hidden;display:flex;flex-direction:column;box-shadow:none;transition:none;word-break:break-word;}
+.day-cell{height:110px; border:1.5px solid #222;border-radius:14px;padding:10px;position:relative;background:#fff;overflow:hidden;display:flex;flex-direction:column;box-shadow:none;transition:none;word-break:break-word;}
 .day-cell.weekend {
 	background: #f7f6f2 !important;
 }
