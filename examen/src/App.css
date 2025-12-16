@@ -1,0 +1,128 @@
+.day-cell.today {
+	border: 2.5px solid #3bb3e0 !important;
+	background: #eaf6fb !important;
+	box-shadow: 0 0 0 2px #3bb3e033;
+}
+.day-cell.today .day-number {
+	background: #3bb3e0 !important;
+	color: #fff !important;
+	font-weight: 900;
+	border: 2px solid #fff;
+}
+:root{
+	--bg:#ffffff;
+	--muted:#666;
+	--primary:#60c1be;
+	--accent:#8fd3d3;
+	--card-border:#d9d9d9;
+}
+
+html,body,#root{height:100%;}
+body{margin:0;background:var(--bg);font-family:Inter, Arial, sans-serif;color:#111}
+
+.app{padding:40px 48px;max-width:1100px;margin:0 auto}
+.app h1{font-size:40px;margin:0 0 18px 0}
+
+.top-controls{display:flex;gap:12px;align-items:center;margin-bottom:22px}
+.btn{border:none;padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:600}
+.btn-add{background:var(--accent)}
+.nav-button{background:transparent;border:1px solid var(--card-border);padding:8px 12px;border-radius:8px;cursor:pointer}
+
+.calendar-wrapper{background:transparent}
+.calendar-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.calendar-header h2{margin:0;font-size:20px}
+
+.weekday-row{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:8px}
+.weekday-row > div{font-weight:700;text-align:center}
+
+.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:48px;max-width:2400px;margin:0 auto}
+.day-cell{height:200px;border:1px solid var(--card-border);border-radius:20px;padding:18px;position:relative;background:#fff;overflow:hidden;display:flex;flex-direction:column}
+.day-cell.empty{background:transparent;border-style:solid;opacity:0.6}
+.day-number{position:absolute;left:16px;top:16px;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#eef;font-size:16px;font-weight:700}
+.day-content{margin-top:72px;display:flex;flex-direction:column;gap:8px;flex:1;overflow-y:auto;padding-right:6px}
+
+.avail-badge{font-size:12px;background:#e6f6f6;color:#0a6; padding:4px 8px;border-radius:8px}
+.appt-badge{font-size:12px;color:#fff;padding:6px 8px;border-radius:14px;cursor:pointer;display:inline-block}
+.appt-beeldbellen{background:#60c1be}
+.appt-belafspraak{background:#ff6b6b}
+.appt-behandeling{background:#b28cff}
+
+.hint{margin-top:12px;font-size:13px;color:var(--muted)}
+
+/* Appointment form styles */
+.appt-form{display:flex;flex-direction:column;gap:12px;min-width:320px}
+.appt-form .form-row{display:flex;flex-direction:column;gap:6px}
+.appt-form label{font-weight:600;font-size:13px}
+.appt-form input[type="date"], .appt-form select, .appt-form input[type="time"]{padding:8px;border:1px solid var(--card-border);border-radius:8px}
+.appt-form .form-actions{display:flex;gap:8px;align-items:center}
+.appt-form .form-actions button{padding:8px 12px;border-radius:8px;border:none;cursor:pointer}
+.appt-form .form-actions .danger{margin-left:auto;background:#e04;color:#fff}
+.appt-form .form-actions button:disabled{opacity:0.5;cursor:not-allowed}
+
+/* Calendar visual improvements */
+
+/* Minimalistische agenda styling zoals in het design */
+.calendar-grid{display:grid;grid-template-columns:repeat(7, 1fr);gap:12px;max-width:1050px;margin:0 auto}
+.day-cell{height:110px; min-width:100px; border:1.5px solid #222;border-radius:14px;padding:8px;position:relative;background:#fff;overflow:hidden;display:flex;flex-direction:column;box-shadow:none;transition:none}
+.day-cell.weekend {
+	background: #f7f6f2 !important;
+}
+.day-cell.empty{background:transparent;border-style:solid;opacity:0.5;box-shadow:none}
+.day-number{position:absolute;left:10px;top:10px;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#eef;font-size:15px;font-weight:700;color:#333}
+.day-content{margin-top:32px;display:flex;flex-direction:column;gap:6px;flex:1;overflow-y:auto;padding-right:2px}
+.appt-badge{
+	font-size:11px;
+	color:#fff;
+	padding:2px 7px;
+	border-radius:7px;
+	cursor:pointer;
+	display:inline-flex;
+	gap:4px;
+	align-items:center;
+	box-shadow:none;
+	white-space:normal;
+	overflow-wrap:break-word;
+	word-break:break-word;
+	max-width:100%;
+}
+.appt-badge .badge-icon svg {
+	width: 13px;
+	height: 13px;
+	margin-right: 2px;
+}
+.avail-badge{font-size:11px;background:#e6f6f6;color:#0a6;padding:3px 8px;border-radius:8px;display:inline-block;border:1px solid #b2e0e0;box-shadow:none}
+
+/* badge icon + text spacing */
+.badge-icon{display:inline-flex;align-items:center;justify-content:center;margin-right:8px;color:rgba(255,255,255,0.95)}
+.badge-text{display:inline-flex;align-items:center;gap:8px}
+.badge-label{opacity:0.95;font-weight:600}
+
+/* Responsive rules */
+@media (max-width: 1200px){
+	.calendar-grid{grid-template-columns:repeat(3,1fr);gap:12px}
+}
+@media (max-width: 900px){
+	.app{padding:20px}
+	.calendar-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+	.weekday-row{margin-bottom:6px}
+	.day-cell{min-height:70px;padding:8px;border-radius:14px}
+	.day-number{width:28px;height:28px;left:10px;top:8px;font-size:13px}
+	.day-content{margin-top:32px;gap:6px}
+}
+
+@media (max-width: 600px){
+	.calendar-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+	.weekday-row{display:none}
+	.day-cell{min-height:64px;padding:8px;border-radius:12px}
+	.appt-badge{font-size:11px;padding:5px 7px}
+	.appt-badge .badge-text{font-size:11px}
+	.appt-form{min-width:240px}
+}
+
+@media (max-width: 420px){
+	.calendar-grid{grid-template-columns:repeat(1,1fr)}
+	.day-cell{min-height:56px;padding:6px}
+	.day-number{width:24px;height:24px;font-size:12px}
+}
+
+
