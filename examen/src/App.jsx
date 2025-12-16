@@ -126,7 +126,10 @@ export default function App() {
           <button className="btn" onClick={() => openNewAppointment(date)}>
             Nieuwe afspraak
           </button>
-          <button className="btn btn-add" onClick={() => openNewAvailability(date)}>
+          <button
+            className="btn btn-add"
+            onClick={() => openNewAvailability(date)}
+          >
             Beschikbaarheid
           </button>
         </div>
@@ -140,7 +143,15 @@ export default function App() {
         initial={avail}
         onCancel={() => setModalContent(null)}
         onDelete={(id) => {
+          // Find the availability being deleted to get its date
+          const availToDelete = availabilities.find((a) => a.id === id);
           setAvailabilities((prev) => prev.filter((p) => p.id !== id));
+          // Remove all appointments on that date
+          if (availToDelete) {
+            setAppointments((prev) =>
+              prev.filter((a) => a.date !== availToDelete.date)
+            );
+          }
           setModalContent(null);
         }}
         onSave={(av) => {
