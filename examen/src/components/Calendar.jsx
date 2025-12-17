@@ -60,7 +60,9 @@ export default function Calendar({
               );
             const iso = formatDateISO(cell);
             const dayAppts = appointments.filter((a) => a.date === iso);
-            const dayAvailSpecific = availabilities.filter((av) => av.date === iso);
+            const dayAvailSpecific = availabilities.filter(
+              (av) => av.date === iso
+            );
             const dayAvailRecurring = recurringAvailabilities
               .filter((rav) => ruleAppliesOnISO(rav, iso))
               .map((rav) => ({
@@ -94,19 +96,27 @@ export default function Calendar({
                     const content = (
                       <div
                         key={av.id}
-                        className={"avail-badge" + (av._recurring ? " avail-recurring" : "")}
+                        className={
+                          "avail-badge" +
+                          (av._recurring ? " avail-recurring" : "")
+                        }
                       >
                         <span className="avail-title">
-                          {av._recurring ? "Vaste beschikbaarheid" : "Beschikbaar"}
+                          {av._recurring
+                            ? "Vaste beschikbaarheid"
+                            : "Beschikbaar"}
                         </span>
-                        <span className="avail-time">{av.start}-{av.end}</span>
+                        <span className="avail-time">
+                          {av.start}-{av.end}
+                        </span>
                       </div>
                     );
                     if (av._recurring) {
                       return React.cloneElement(content, {
                         onClick: (e) => {
                           e.stopPropagation();
-                          onEditRecurringAvailability && onEditRecurringAvailability(av._rule, iso);
+                          onEditRecurringAvailability &&
+                            onEditRecurringAvailability(av._rule, iso);
                         },
                       });
                     }

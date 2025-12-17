@@ -20,7 +20,13 @@ function weekdayLabel(day) {
   }
 }
 
-export default function RecurringAvailabilityDetail({ rule, date, onClose, onDelete, onDeleteOne }) {
+export default function RecurringAvailabilityDetail({
+  rule,
+  date,
+  onClose,
+  onDelete,
+  onDeleteOne,
+}) {
   if (!rule) return null;
   const displayDate = date
     ? new Date(date + "T00:00:00").toLocaleDateString("nl-NL", {
@@ -46,8 +52,17 @@ export default function RecurringAvailabilityDetail({ rule, date, onClose, onDel
         {displayDate && (
           <div className="detail-date-callout">
             <span className="detail-icon" aria-hidden>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z" fill="currentColor"/>
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
+                  fill="currentColor"
+                />
               </svg>
             </span>
             <span>
@@ -57,7 +72,9 @@ export default function RecurringAvailabilityDetail({ rule, date, onClose, onDel
         )}
       </div>
       <div className="form-actions">
-        <button type="button" className="btn btn-outline" onClick={onClose}>Sluiten</button>
+        <button type="button" className="btn btn-outline" onClick={onClose}>
+          Sluiten
+        </button>
         {date && (
           <button
             type="button"
@@ -73,7 +90,7 @@ export default function RecurringAvailabilityDetail({ rule, date, onClose, onDel
           className="btn btn-danger"
           onClick={() => onDelete && onDelete(rule.id)}
         >
-          Verwijder volledige regel
+          Verwijder vaste beschikbaarheid
         </button>
       </div>
     </div>

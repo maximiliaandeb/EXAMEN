@@ -41,7 +41,8 @@ export function weekdayOfISO(iso) {
 export function ruleAppliesOnISO(rule, iso) {
   const d = isoToDate(iso);
   const jsDay = d.getDay();
-  if (Array.isArray(rule.exceptions) && rule.exceptions.includes(iso)) return false;
+  if (Array.isArray(rule.exceptions) && rule.exceptions.includes(iso))
+    return false;
   if (rule.weekday !== jsDay) return false;
   if (rule.startDate) {
     const from = isoToDate(rule.startDate);

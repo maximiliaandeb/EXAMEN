@@ -21,10 +21,25 @@ function weekdayLabel(day) {
   }
 }
 
-export default function RecurringAvailabilityManager({ rules = [], onDelete, onAddException, onRemoveException, onAddRule }) {
+export default function RecurringAvailabilityManager({
+  rules = [],
+  onDelete,
+  onAddException,
+  onRemoveException,
+  onAddRule,
+}) {
   const [dates, setDates] = useState({}); // per rule input value
-  const [newRule, setNewRule] = useState({ weekday: 1, start: "10:00", end: "12:00", startDate: "", endDate: "" });
-  const startAligned = !!newRule.startDate && new Date(newRule.startDate + "T00:00:00").getDay() === Number(newRule.weekday);
+  const [newRule, setNewRule] = useState({
+    weekday: 1,
+    start: "10:00",
+    end: "12:00",
+    startDate: "",
+    endDate: "",
+  });
+  const startAligned =
+    !!newRule.startDate &&
+    new Date(newRule.startDate + "T00:00:00").getDay() ===
+      Number(newRule.weekday);
 
   const allTimes = useMemo(() => {
     const times = [];
@@ -50,7 +65,9 @@ export default function RecurringAvailabilityManager({ rules = [], onDelete, onA
           <label>Weekdag</label>
           <select
             value={newRule.weekday}
-            onChange={(e) => setNewRule((r) => ({ ...r, weekday: Number(e.target.value) }))}
+            onChange={(e) =>
+              setNewRule((r) => ({ ...r, weekday: Number(e.target.value) }))
+            }
           >
             <option value={1}>Maandag</option>
             <option value={2}>Dinsdag</option>
@@ -71,11 +88,17 @@ export default function RecurringAvailabilityManager({ rules = [], onDelete, onA
               const idx = allTimes.indexOf(start);
               const endIdx = Math.min(idx + 4, allTimes.length - 1);
               const end = allTimes[endIdx];
-              setNewRule((r) => ({ ...r, start, end: r.end && r.end !== r.start ? r.end : end }));
+              setNewRule((r) => ({
+                ...r,
+                start,
+                end: r.end && r.end !== r.start ? r.end : end,
+              }));
             }}
           >
             {allTimes.map((t) => (
-              <option key={t} value={t}>{t}</option>
+              <option key={t} value={t}>
+                {t}
+              </option>
             ))}
           </select>
         </div>
@@ -88,7 +111,9 @@ export default function RecurringAvailabilityManager({ rules = [], onDelete, onA
             {allTimes
               .filter((t) => t > newRule.start)
               .map((t) => (
-                <option key={t} value={t}>{t}</option>
+                <option key={t} value={t}>
+                  {t}
+                </option>
               ))}
           </select>
         </div>
@@ -97,11 +122,15 @@ export default function RecurringAvailabilityManager({ rules = [], onDelete, onA
           <input
             type="date"
             value={newRule.startDate}
-            onChange={(e) => setNewRule((r) => ({ ...r, startDate: e.target.value }))}
+            onChange={(e) =>
+              setNewRule((r) => ({ ...r, startDate: e.target.value }))
+            }
             required
           />
           {newRule.startDate && !startAligned && (
-            <div className="field-hint error">Kies een datum die op de gekozen weekdag valt.</div>
+            <div className="field-hint error">
+              Kies een datum die op de gekozen weekdag valt.
+            </div>
           )}
         </div>
         <div className="form-row">
@@ -109,7 +138,9 @@ export default function RecurringAvailabilityManager({ rules = [], onDelete, onA
           <input
             type="date"
             value={newRule.endDate}
-            onChange={(e) => setNewRule((r) => ({ ...r, endDate: e.target.value }))}
+            onChange={(e) =>
+              setNewRule((r) => ({ ...r, endDate: e.target.value }))
+            }
           />
         </div>
         <div className="form-actions">
@@ -122,7 +153,9 @@ export default function RecurringAvailabilityManager({ rules = [], onDelete, onA
                 return;
               }
               if (!startAligned) {
-                alert("Kies een 'Vanaf'-datum die op de geselecteerde weekdag valt.");
+                alert(
+                  "Kies een 'Vanaf'-datum die op de geselecteerde weekdag valt."
+                );
                 return;
               }
               if (newRule.start >= newRule.end) {
@@ -139,9 +172,19 @@ export default function RecurringAvailabilityManager({ rules = [], onDelete, onA
                 endDate: newRule.endDate || undefined,
               };
               onAddRule && onAddRule(payload);
-              setNewRule({ weekday: 1, start: "10:00", end: "12:00", startDate: "", endDate: "" });
+              setNewRule({
+                weekday: 1,
+                start: "10:00",
+                end: "12:00",
+                startDate: "",
+                endDate: "",
+              });
             }}
-            disabled={!newRule.startDate || !startAligned || newRule.start >= newRule.end}
+            disabled={
+              !newRule.startDate ||
+              !startAligned ||
+              newRule.start >= newRule.end
+            }
           >
             Voeg vaste beschikbaarheid toe
           </button>
@@ -160,12 +203,8 @@ export default function RecurringAvailabilityManager({ rules = [], onDelete, onA
                 </span>
               </div>
               <div className="recurring-range">
-                <span>
-                  Vanaf: {r.startDate || "—"}
-                </span>
-                <span>
-                  Tot en met: {r.endDate || "—"}
-                </span>
+                <span>Vanaf: {r.startDate || "—"}</span>
+                <span>Tot en met: {r.endDate || "—"}</span>
               </div>
               {Array.isArray(r.exceptions) && r.exceptions.length > 0 && (
                 <div className="recurring-exceptions">
@@ -173,15 +212,20 @@ export default function RecurringAvailabilityManager({ rules = [], onDelete, onA
                   <div className="exceptions-list">
                     {r.exceptions.map((ex) => (
                       <span key={ex} className="exception-chip">
-                        {new Date(ex + "T00:00:00").toLocaleDateString("nl-NL", {
-                          day: "numeric",
-                          month: "long",
-                          year: "numeric",
-                        })}
+                        {new Date(ex + "T00:00:00").toLocaleDateString(
+                          "nl-NL",
+                          {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          }
+                        )}
                         <button
                           type="button"
                           className="chip-remove"
-                          onClick={() => onRemoveException && onRemoveException(r.id, ex)}
+                          onClick={() =>
+                            onRemoveException && onRemoveException(r.id, ex)
+                          }
                           aria-label={`Verwijder uitzondering ${ex}`}
                         >
                           ×
@@ -202,20 +246,31 @@ export default function RecurringAvailabilityManager({ rules = [], onDelete, onA
                     />
                     {(() => {
                       const iso = dates[r.id];
-                      const aligned = !iso || new Date(iso + "T00:00:00").getDay() === Number(r.weekday);
+                      const aligned =
+                        !iso ||
+                        new Date(iso + "T00:00:00").getDay() ===
+                          Number(r.weekday);
                       return (
                         <>
                           <button
                             type="button"
                             className="btn btn-outline"
                             disabled={!iso || !aligned}
-                            onClick={() => iso && aligned && onAddException && onAddException(r.id, iso)}
+                            onClick={() =>
+                              iso &&
+                              aligned &&
+                              onAddException &&
+                              onAddException(r.id, iso)
+                            }
                             title="Verwijder de beschikbaarheid voor deze specifieke dag"
                           >
                             Verwijder dag
                           </button>
                           {iso && !aligned && (
-                            <div className="field-hint error">Kies een datum die op {weekdayLabel(r.weekday)} valt.</div>
+                            <div className="field-hint error">
+                              Kies een datum die op {weekdayLabel(r.weekday)}{" "}
+                              valt.
+                            </div>
                           )}
                         </>
                       );
@@ -224,7 +279,9 @@ export default function RecurringAvailabilityManager({ rules = [], onDelete, onA
                 </div>
               </div>
               <div className="manager-delete">
-                <span className="manager-delete-text">Verwijder volledige wekelijkse regel</span>
+                <span className="manager-delete-text">
+                  Verwijder volledige wekelijkse regel
+                </span>
                 <div className="recurring-actions">
                   <button
                     type="button"

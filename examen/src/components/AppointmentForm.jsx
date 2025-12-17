@@ -1,5 +1,10 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { timeToMinutes, addMinutesToTime, formatDateISO, ruleAppliesOnISO } from "./dateUtils";
+import {
+  timeToMinutes,
+  addMinutesToTime,
+  formatDateISO,
+  ruleAppliesOnISO,
+} from "./dateUtils";
 
 const TYPES = [
   {

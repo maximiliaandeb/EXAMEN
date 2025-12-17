@@ -18,8 +18,10 @@ export default function AvailabilityForm({
   const [weekday, setWeekday] = useState(jsDay);
   const [fromDate, setFromDate] = useState(date);
   const [untilDate, setUntilDate] = useState("");
-  const isStartAligned = !repeatWeekly
-    || (!!fromDate && new Date(fromDate + "T00:00:00").getDay() === Number(weekday));
+  const isStartAligned =
+    !repeatWeekly ||
+    (!!fromDate &&
+      new Date(fromDate + "T00:00:00").getDay() === Number(weekday));
 
   // Genereer alle kwartier-tijden
   const allTimes = useMemo(() => {
@@ -126,7 +128,10 @@ export default function AvailabilityForm({
         <>
           <div className="form-row">
             <label>Weekdag</label>
-            <select value={weekday} onChange={(e) => setWeekday(e.target.value)}>
+            <select
+              value={weekday}
+              onChange={(e) => setWeekday(e.target.value)}
+            >
               <option value={1}>Maandag</option>
               <option value={2}>Dinsdag</option>
               <option value={3}>Woensdag</option>
@@ -161,7 +166,9 @@ export default function AvailabilityForm({
         </>
       )}
       <div className="form-actions">
-        <button type="submit" disabled={repeatWeekly && !isStartAligned}>Opslaan</button>
+        <button type="submit" disabled={repeatWeekly && !isStartAligned}>
+          Opslaan
+        </button>
         <button type="button" onClick={onCancel}>
           Annuleren
         </button>
