@@ -1,5 +1,5 @@
 import React from "react";
-import { formatDateISO, daysInMonth } from "./dateUtils";
+import { formatDateISO, daysInMonth, ruleAppliesOnISO } from "./dateUtils";
 
 function weekdayNames() {
   return ["Ma", "Di", "Wo", "Do", "Vr", "Za", "Zo"];
@@ -10,8 +10,10 @@ export default function Calendar({
   month,
   appointments,
   availabilities,
+  recurringAvailabilities = [],
   onEditAppointment,
   onEditAvailability,
+  onEditRecurringAvailability,
   onDayClick,
   onPrev,
   onNext,
@@ -58,7 +60,17 @@ export default function Calendar({
               );
             const iso = formatDateISO(cell);
             const dayAppts = appointments.filter((a) => a.date === iso);
-            const dayAvail = availabilities.filter((av) => av.date === iso);
+            const dayAvailSpecific = availabilities.filter((av) => av.date === iso);
+            const dayAvailRecurring = recurringAvailabilities
+              .filter((rav) => ruleAppliesOnISO(rav, iso))
+              .map((rav) => ({
+                id: rav.id,
+                start: rav.start,
+                end: rav.end,
+                _recurring: true,
+                _rule: rav,
+              }));
+            const dayAvail = [...dayAvailSpecific, ...dayAvailRecurring];
             const todayDate = new Date();
             const isToday =
               cell.getFullYear() === todayDate.getFullYear() &&
@@ -78,18 +90,33 @@ export default function Calendar({
               >
                 <div className="day-number">{cell.getDate()}</div>
                 <div className="day-content">
-                  {dayAvail.map((av) => (
-                    <div
-                      key={av.id}
-                      className="avail-badge"
-                      onClick={(e) => {
+                  {dayAvail.map((av) => {
+                    const content = (
+                      <div
+                        key={av.id}
+                        className={"avail-badge" + (av._recurring ? " avail-recurring" : "")}
+                      >
+                        <span className="avail-title">
+                          {av._recurring ? "Vaste beschikbaarheid" : "Beschikbaar"}
+                        </span>
+                        <span className="avail-time">{av.start}-{av.end}</span>
+                      </div>
+                    );
+                    if (av._recurring) {
+                      return React.cloneElement(content, {
+                        onClick: (e) => {
+                          e.stopPropagation();
+                          onEditRecurringAvailability && onEditRecurringAvailability(av._rule, iso);
+                        },
+                      });
+                    }
+                    return React.cloneElement(content, {
+                      onClick: (e) => {
                         e.stopPropagation();
                         onEditAvailability(av);
-                      }}
-                    >
-                      Beschikbaar {av.start}-{av.end}
-                    </div>
-                  ))}
+                      },
+                    });
+                  })}
                   {dayAppts.map((a) => (
                     <div
                       key={a.id}

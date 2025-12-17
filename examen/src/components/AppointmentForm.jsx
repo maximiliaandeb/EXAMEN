@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { timeToMinutes, addMinutesToTime, formatDateISO } from "./dateUtils";
+import { timeToMinutes, addMinutesToTime, formatDateISO, ruleAppliesOnISO } from "./dateUtils";
 
 const TYPES = [
   {
@@ -30,6 +30,7 @@ export default function AppointmentForm({
   onDelete,
   appointments = [],
   availabilities,
+  recurringAvailabilities = [],
 }) {
   const [type, setType] = useState(initial?.type || TYPES[0].value);
   const [time, setTime] = useState(initial?.time || "09:00");
@@ -54,10 +55,14 @@ export default function AppointmentForm({
     return times;
   }, []);
 
-  // filter times to those that fit at least one availability for the selected date
+  // filter times to those that fit at least one availability (specific or recurring) for the selected date
   const availableTimes = useMemo(() => {
     const duration = getDuration();
-    const dayAvail = availabilities.filter((a) => a.date === apptDate);
+    const dayAvailSpecific = availabilities.filter((a) => a.date === apptDate);
+    const dayAvailRecurring = recurringAvailabilities
+      .filter((rav) => ruleAppliesOnISO(rav, apptDate))
+      .map((rav) => ({ start: rav.start, end: rav.end }));
+    const dayAvail = [...dayAvailSpecific, ...dayAvailRecurring];
     const dayAppts = appointments.filter(
       (a) => a.date === apptDate && a.id !== initial?.id
     );
@@ -91,7 +96,11 @@ export default function AppointmentForm({
     const duration = getDuration();
     const start = timeToMinutes(time);
     const end = start + duration;
-    const dayAvail = availabilities.filter((a) => a.date === apptDate);
+    const dayAvailSpecific = availabilities.filter((a) => a.date === apptDate);
+    const dayAvailRecurring = recurringAvailabilities
+      .filter((rav) => ruleAppliesOnISO(rav, apptDate))
+      .map((rav) => ({ start: rav.start, end: rav.end }));
+    const dayAvail = [...dayAvailSpecific, ...dayAvailRecurring];
     const dayAppts = appointments.filter(
       (a) => a.date === apptDate && a.id !== initial?.id
     );

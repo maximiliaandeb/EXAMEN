@@ -3,6 +3,8 @@ import Calendar from "./components/Calendar";
 import Modal from "./components/Modal";
 import AppointmentForm from "./components/AppointmentForm";
 import AvailabilityForm from "./components/AvailabilityForm";
+import RecurringAvailabilityManager from "./components/RecurringAvailabilityManager";
+import RecurringAvailabilityDetail from "./components/RecurringAvailabilityDetail";
 import "./App.css";
 
 function load(key, fallback) {
@@ -29,6 +31,9 @@ export default function App() {
   const [availabilities, setAvailabilities] = useState(() =>
     load("availabilities", [])
   );
+  const [recurringAvailabilities, setRecurringAvailabilities] = useState(() =>
+    load("recurringAvailabilities", [])
+  );
 
   const [modalContent, setModalContent] = useState(null);
 
@@ -38,6 +43,9 @@ export default function App() {
   useEffect(() => {
     save("availabilities", availabilities);
   }, [availabilities]);
+  useEffect(() => {
+    save("recurringAvailabilities", recurringAvailabilities);
+  }, [recurringAvailabilities]);
 
   function handlePrev() {
     const m = month - 1;
@@ -60,6 +68,7 @@ export default function App() {
         date={date}
         appointments={appointments}
         availabilities={availabilities}
+        recurringAvailabilities={recurringAvailabilities}
         onCancel={() => setModalContent(null)}
         onSave={(a) => {
           setAppointments((prev) => {
@@ -81,6 +90,7 @@ export default function App() {
         initial={appt}
         appointments={appointments}
         availabilities={availabilities}
+        recurringAvailabilities={recurringAvailabilities}
         onCancel={() => setModalContent(null)}
         onDelete={(id) => {
           setAppointments((prev) => prev.filter((p) => p.id !== id));
@@ -109,6 +119,14 @@ export default function App() {
           setAvailabilities((prev) =>
             [...prev.filter((p) => p.id !== av.id), av].sort((a, b) =>
               a.date.localeCompare(b.date)
+            )
+          );
+          setModalContent(null);
+        }}
+        onSaveRecurring={(rav) => {
+          setRecurringAvailabilities((prev) =>
+            [...prev.filter((p) => p.id !== rav.id), rav].sort((a, b) =>
+              (a.weekday - b.weekday) || (a.start || "").localeCompare(b.start || "")
             )
           );
           setModalContent(null);
@@ -162,6 +180,14 @@ export default function App() {
           );
           setModalContent(null);
         }}
+        onSaveRecurring={(rav) => {
+          setRecurringAvailabilities((prev) =>
+            [...prev.filter((p) => p.id !== rav.id), rav].sort((a, b) =>
+              (a.weekday - b.weekday) || (a.start || "").localeCompare(b.start || "")
+            )
+          );
+          setModalContent(null);
+        }}
       />
     );
   }
@@ -176,6 +202,45 @@ export default function App() {
         <button className="btn btn-add" onClick={() => openNewAvailability()}>
           Voeg beschikbaarheid toe
         </button>
+        <button
+          className="btn"
+          onClick={() =>
+            setModalContent(
+              <RecurringAvailabilityManager
+                rules={recurringAvailabilities}
+                onDelete={(id) => {
+                  setRecurringAvailabilities((prev) => prev.filter((p) => p.id !== id));
+                  setModalContent(null);
+                }}
+                onAddRule={(rav) => {
+                  setRecurringAvailabilities((prev) =>
+                    [...prev.filter((p) => p.id !== rav.id), rav].sort((a, b) => (a.weekday - b.weekday) || (a.start || "").localeCompare(b.start || ""))
+                  );
+                }}
+                onAddException={(id, iso) => {
+                  setRecurringAvailabilities((prev) =>
+                    prev.map((p) => {
+                      if (p.id !== id) return p;
+                      const exceptions = Array.from(new Set([...(p.exceptions || []), iso]));
+                      return { ...p, exceptions };
+                    })
+                  );
+                }}
+                onRemoveException={(id, iso) => {
+                  setRecurringAvailabilities((prev) =>
+                    prev.map((p) => {
+                      if (p.id !== id) return p;
+                      const exceptions = (p.exceptions || []).filter((d) => d !== iso);
+                      return { ...p, exceptions };
+                    })
+                  );
+                }}
+              />
+            )
+          }
+        >
+          Beheer vaste beschikbaarheid
+        </button>
         <div style={{ marginLeft: "auto" }}></div>
       </div>
 
@@ -185,8 +250,32 @@ export default function App() {
           month={month}
           appointments={appointments}
           availabilities={availabilities}
+          recurringAvailabilities={recurringAvailabilities}
           onEditAppointment={(a) => openEditAppointment(a)}
           onEditAvailability={(av) => openEditAvailability(av)}
+          onEditRecurringAvailability={(rule, iso) =>
+            setModalContent(
+              <RecurringAvailabilityDetail
+                rule={rule}
+                date={iso}
+                onClose={() => setModalContent(null)}
+                onDelete={(id) => {
+                  setRecurringAvailabilities((prev) => prev.filter((p) => p.id !== id));
+                  setModalContent(null);
+                }}
+                onDeleteOne={(id, dateIso) => {
+                  setRecurringAvailabilities((prev) =>
+                    prev.map((p) => {
+                      if (p.id !== id) return p;
+                      const exceptions = Array.from(new Set([...(p.exceptions || []), dateIso]));
+                      return { ...p, exceptions };
+                    })
+                  );
+                  setModalContent(null);
+                }}
+              />
+            )
+          }
           onDayClick={(iso) => openDayQuickActions(iso)}
           onPrev={handlePrev}
           onNext={handleNext}

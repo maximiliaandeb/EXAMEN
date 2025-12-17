@@ -25,3 +25,31 @@ export function addMinutesToTime(t, minutes) {
   const mm = total % 60;
   return `${String(hh).padStart(2, "0")}:${String(mm).padStart(2, "0")}`;
 }
+
+// Helpers for recurring availability
+export function isoToDate(iso) {
+  return new Date(iso + "T00:00:00");
+}
+
+// 0..6 => 0=Sun .. 6=Sat
+export function weekdayOfISO(iso) {
+  return isoToDate(iso).getDay();
+}
+
+// Check if weekly rule applies on an ISO date
+// rule: { weekday: 0..6 (0=Sun), startDate?: ISO, endDate?: ISO }
+export function ruleAppliesOnISO(rule, iso) {
+  const d = isoToDate(iso);
+  const jsDay = d.getDay();
+  if (Array.isArray(rule.exceptions) && rule.exceptions.includes(iso)) return false;
+  if (rule.weekday !== jsDay) return false;
+  if (rule.startDate) {
+    const from = isoToDate(rule.startDate);
+    if (d < from) return false;
+  }
+  if (rule.endDate) {
+    const until = isoToDate(rule.endDate);
+    if (d > until) return false;
+  }
+  return true;
+}
