@@ -245,7 +245,9 @@ export default function App() {
                       );
                       return { ...p, exceptions };
                     })
-                  );                  setAppointments((prev) => prev.filter((a) => a.date !== iso));                }}
+                  );
+                  setAppointments((prev) => prev.filter((a) => a.date !== iso));
+                }}
                 onRemoveException={(id, iso) => {
                   setRecurringAvailabilities((prev) =>
                     prev.map((p) => {
@@ -297,7 +299,9 @@ export default function App() {
                       return { ...p, exceptions };
                     })
                   );
-                  setAppointments((prev) => prev.filter((a) => a.date !== dateIso));
+                  setAppointments((prev) =>
+                    prev.filter((a) => a.date !== dateIso)
+                  );
                   setModalContent(null);
                 }}
               />
